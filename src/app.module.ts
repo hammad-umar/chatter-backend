@@ -8,6 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './common/database/database.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { DatabaseModule } from './common/database/database.module';
 
     DatabaseModule,
     UsersModule,
+    AuthModule,
   ],
   providers: [
     {

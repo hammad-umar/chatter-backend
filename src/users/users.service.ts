@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
 import { UserInputError } from '@nestjs/apollo';
@@ -55,5 +59,20 @@ export class UsersService {
 
   async delete(_id: string): Promise<User> {
     return this.usersRepository.findOneAndDelete({ _id });
+  }
+
+  async verifyUser(email: string, password: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ email });
+
+    const isPasswordValid = await this.bcryptService.compare(
+      password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid Credentials.');
+    }
+
+    return user;
   }
 }
