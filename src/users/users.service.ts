@@ -1,11 +1,10 @@
 import {
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
-import { UserInputError } from '@nestjs/apollo';
 import { BcryptService } from '../common/services/bcrypt/bcrypt.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -33,10 +32,10 @@ export class UsersService {
       });
     } catch (error) {
       if (error.code === 11000) {
-        throw new UserInputError('Email is already taken.');
+        throw new UnprocessableEntityException('Email is already taken.');
       }
 
-      throw new InternalServerErrorException(error);
+      throw error;
     }
   }
 

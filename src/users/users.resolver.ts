@@ -45,4 +45,10 @@ export class UsersResolver {
   async delete(@CurrentUser() user: JwtTokenPayload): Promise<User> {
     return this.usersService.delete(user._id);
   }
+
+  @UseGuards(GraphQlAuthGuard)
+  @Query(() => User, { name: 'me' })
+  async getMe(@CurrentUser() user: JwtTokenPayload): Promise<JwtTokenPayload> {
+    return user;
+  }
 }
